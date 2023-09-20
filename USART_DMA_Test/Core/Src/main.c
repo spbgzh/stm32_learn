@@ -21,7 +21,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdio.h>
+#include <string.h>
+#include <stdarg.h>	
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,8 +49,9 @@ DMA_HandleTypeDef hdma_usart1_rx;
 DMA_HandleTypeDef hdma_usart1_tx;
 
 /* USER CODE BEGIN PV */
-
 uint8_t rx_buffer[128];
+RTC_TimeTypeDef time;
+RTC_DateTypeDef date;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -62,6 +65,16 @@ static void MX_USART1_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+char  DebugBuf[64];
+void Debug(char *p,...)
+{
+	va_list ap;
+	va_start(ap,p);
+	vsprintf(DebugBuf,p,ap);
+	va_end(ap);	
+	HAL_UART_Transmit(&huart1,(uint8_t *)DebugBuf,strlen(DebugBuf),50);
+}
+
 
 /* USER CODE END 0 */
 
@@ -105,6 +118,9 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+		HAL_RTC_GetTime(&hrtc,&time,RTC_FORMAT_BIN);
+		Debug("%02d:%02d:%02d\n%02d-%02d-%02d %02d",time.Hours,time.Minutes,time.Seconds,date.Year,date.Month,date.Date,date.WeekDay);
+		HAL_Delay(1000);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
