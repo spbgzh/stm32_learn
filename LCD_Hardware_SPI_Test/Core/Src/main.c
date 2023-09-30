@@ -103,17 +103,17 @@ int main(void)
   {
     /* USER CODE END WHILE */
     LCD_Clear(WHITE);
-		HAL_Delay(1000);
+		HAL_Delay(50);
     LCD_Clear(BLUE);
-		HAL_Delay(1000);
+		HAL_Delay(50);
     LCD_Clear(RED);
-		HAL_Delay(1000);
+		HAL_Delay(50);
     LCD_Clear(GREEN);
-		HAL_Delay(1000);
+		HAL_Delay(50);
     LCD_Clear(YELLOW);
-		HAL_Delay(1000);
+		HAL_Delay(50);
     LCD_Clear(BLACK);
-		HAL_Delay(1000);
+		HAL_Delay(50);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
