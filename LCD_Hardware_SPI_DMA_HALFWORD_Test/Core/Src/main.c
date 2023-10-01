@@ -105,7 +105,7 @@ int main(void)
     /* USER CODE END WHILE */
     Test_DMA(RED);
 		HAL_Delay(1000);
-    Test_DMA(WHITE);
+    LCD_Clear(RED);
 		HAL_Delay(1000);
 		Test_DMA(BLUE);
 		HAL_Delay(1000);

@@ -103,8 +103,6 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-    Test_DMA(RED);
-		HAL_Delay(1000);
     Test_DMA(WHITE);
 		HAL_Delay(1000);
 		Test_DMA(BLUE);
