@@ -1,0 +1,27 @@
+--cpu Cortex-M3
+"usart_idle_test\startup_stm32f103xb.o"
+"usart_idle_test\main.o"
+"usart_idle_test\stm32f1xx_it.o"
+"usart_idle_test\stm32f1xx_hal_msp.o"
+"usart_idle_test\stm32f1xx_hal_gpio_ex.o"
+"usart_idle_test\stm32f1xx_hal_rtc.o"
+"usart_idle_test\stm32f1xx_hal_rtc_ex.o"
+"usart_idle_test\stm32f1xx_hal.o"
+"usart_idle_test\stm32f1xx_hal_rcc.o"
+"usart_idle_test\stm32f1xx_hal_rcc_ex.o"
+"usart_idle_test\stm32f1xx_hal_gpio.o"
+"usart_idle_test\stm32f1xx_hal_dma.o"
+"usart_idle_test\stm32f1xx_hal_cortex.o"
+"usart_idle_test\stm32f1xx_hal_pwr.o"
+"usart_idle_test\stm32f1xx_hal_flash.o"
+"usart_idle_test\stm32f1xx_hal_flash_ex.o"
+"usart_idle_test\stm32f1xx_hal_exti.o"
+"usart_idle_test\stm32f1xx_hal_spi.o"
+"usart_idle_test\stm32f1xx_hal_tim.o"
+"usart_idle_test\stm32f1xx_hal_tim_ex.o"
+"usart_idle_test\stm32f1xx_hal_uart.o"
+"usart_idle_test\system_stm32f1xx.o"
+--strict --scatter "USART_IDLE_Test\USART_IDLE_Test.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "USART_IDLE_Test.map" -o USART_IDLE_Test\USART_IDLE_Test.axf

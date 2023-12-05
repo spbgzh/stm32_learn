@@ -265,30 +265,19 @@ void DMA1_Channel5_IRQHandler(void)
 void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
-  // 检查是否是USART1的空闲中断
   if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_IDLE) != RESET)
   {
-    // 清除空闲中断标志(通过读取状态寄存器和数据寄存器)
     __HAL_UART_CLEAR_IDLEFLAG(&huart1);
-
-    // 获取当前接收到的数据长度
     uint32_t data_length = uart_rx_index;
-
-    // 重置接收索引,准备接收下一批数据
     uart_rx_index = 0;
-
-    // 使用HAL_UART_Transmit_IT发送数据
     HAL_UART_Transmit_IT(&huart1, uart_rx_buffer, data_length);
   }
 
-  // 处理接收中断
   if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_RXNE) != RESET)
   {
-    // 读取接收到的字节并存储到缓冲区
     uint8_t received_byte = (uint8_t)(huart1.Instance->DR & 0x00FF);
     uart_rx_buffer[uart_rx_index++] = received_byte;
 
-    // 防止缓冲区溢出
     if (uart_rx_index >= 128)
     {
         uart_rx_index = 0;
@@ -300,7 +289,6 @@ void USART1_IRQHandler(void)
 
   /* USER CODE END USART1_IRQn 1 */
 }
-
 
 /* USER CODE BEGIN 1 */
 

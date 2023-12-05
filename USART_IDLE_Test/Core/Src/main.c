@@ -54,7 +54,7 @@ DMA_HandleTypeDef hdma_spi2_tx;
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
-uint8_t rx_buffer[128];
+extern uint8_t uart_rx_buffer[128];
 RTC_TimeTypeDef time;
 RTC_DateTypeDef date;
 /* USER CODE END PV */
@@ -343,7 +343,7 @@ static void MX_USART1_UART_Init(void)
   }
   /* USER CODE BEGIN USART1_Init 2 */
 	__HAL_UART_ENABLE_IT(&huart1,UART_IT_IDLE);
-	HAL_UART_Receive_IT(&huart1,rx_buffer,sizeof(rx_buffer));
+	HAL_UART_Receive_IT(&huart1,uart_rx_buffer,sizeof(uart_rx_buffer));
   /* USER CODE END USART1_Init 2 */
 
 }
