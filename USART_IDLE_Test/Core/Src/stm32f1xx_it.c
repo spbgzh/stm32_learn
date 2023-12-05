@@ -41,7 +41,8 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+uint8_t uart_rx_buffer[128];
+uint32_t uart_rx_index = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -55,6 +56,10 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern DMA_HandleTypeDef hdma_spi1_rx;
+extern DMA_HandleTypeDef hdma_spi1_tx;
+extern DMA_HandleTypeDef hdma_spi2_rx;
+extern DMA_HandleTypeDef hdma_spi2_tx;
 extern UART_HandleTypeDef huart1;
 /* USER CODE BEGIN EV */
 
@@ -199,44 +204,101 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
+  * @brief This function handles DMA1 channel2 global interrupt.
+  */
+void DMA1_Channel2_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel2_IRQn 0 */
+
+  /* USER CODE END DMA1_Channel2_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_spi1_rx);
+  /* USER CODE BEGIN DMA1_Channel2_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel2_IRQn 1 */
+}
+
+/**
+  * @brief This function handles DMA1 channel3 global interrupt.
+  */
+void DMA1_Channel3_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel3_IRQn 0 */
+
+  /* USER CODE END DMA1_Channel3_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_spi1_tx);
+  /* USER CODE BEGIN DMA1_Channel3_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel3_IRQn 1 */
+}
+
+/**
+  * @brief This function handles DMA1 channel4 global interrupt.
+  */
+void DMA1_Channel4_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel4_IRQn 0 */
+
+  /* USER CODE END DMA1_Channel4_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_spi2_rx);
+  /* USER CODE BEGIN DMA1_Channel4_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel4_IRQn 1 */
+}
+
+/**
+  * @brief This function handles DMA1 channel5 global interrupt.
+  */
+void DMA1_Channel5_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel5_IRQn 0 */
+
+  /* USER CODE END DMA1_Channel5_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_spi2_tx);
+  /* USER CODE BEGIN DMA1_Channel5_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel5_IRQn 1 */
+}
+
+/**
   * @brief This function handles USART1 global interrupt.
   */
-// 假设定义了接收缓冲区和一个变量来跟踪接收的数据长度
-uint8_t uart_rx_buffer[128];
-uint32_t uart_rx_index = 0;
-
 void USART1_IRQHandler(void)
 {
-    // 检查是否是USART1的空闲中断
-    if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_IDLE) != RESET)
+  /* USER CODE BEGIN USART1_IRQn 0 */
+  // 检查是否是USART1的空闲中断
+  if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_IDLE) != RESET)
+  {
+    // 清除空闲中断标志(通过读取状态寄存器和数据寄存器)
+    __HAL_UART_CLEAR_IDLEFLAG(&huart1);
+
+    // 获取当前接收到的数据长度
+    uint32_t data_length = uart_rx_index;
+
+    // 重置接收索引,准备接收下一批数据
+    uart_rx_index = 0;
+
+    // 使用HAL_UART_Transmit_IT发送数据
+    HAL_UART_Transmit_IT(&huart1, uart_rx_buffer, data_length);
+  }
+
+  // 处理接收中断
+  if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_RXNE) != RESET)
+  {
+    // 读取接收到的字节并存储到缓冲区
+    uint8_t received_byte = (uint8_t)(huart1.Instance->DR & 0x00FF);
+    uart_rx_buffer[uart_rx_index++] = received_byte;
+
+    // 防止缓冲区溢出
+    if (uart_rx_index >= 128)
     {
-        // 清除空闲中断标志(通过读取状态寄存器和数据寄存器)
-        __HAL_UART_CLEAR_IDLEFLAG(&huart1);
-
-        // 获取当前接收到的数据长度
-        uint32_t data_length = uart_rx_index;
-
-        // 重置接收索引,准备接收下一批数据
         uart_rx_index = 0;
-
-        // 使用HAL_UART_Transmit_IT发送数据
-        HAL_UART_Transmit_IT(&huart1, uart_rx_buffer, data_length);
     }
+  }
+  /* USER CODE END USART1_IRQn 0 */
+  HAL_UART_IRQHandler(&huart1);
+  /* USER CODE BEGIN USART1_IRQn 1 */
 
-    // 处理接收中断
-    if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_RXNE) != RESET)
-    {
-        // 读取接收到的字节并存储到缓冲区
-        uint8_t received_byte = (uint8_t)(huart1.Instance->DR & 0x00FF);
-        uart_rx_buffer[uart_rx_index++] = received_byte;
-
-        // 防止缓冲区溢出
-        if (uart_rx_index >= 128)
-        {
-            uart_rx_index = 0;
-        }
-    }
-    HAL_UART_IRQHandler(&huart1);
+  /* USER CODE END USART1_IRQn 1 */
 }
 
 
